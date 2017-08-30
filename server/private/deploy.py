@@ -344,6 +344,15 @@ def ensure_api_key_and_usage_plan(restApiId):
             print('found existing usage plan')
             break
 
+    if 'apiStages' not in plan or len(plan['apiStages']) != 1:
+        print('usage plan missing required apiStages')
+        print('the only way to correct this is to delete and re-create the usage plan')
+        apigateway.delete_usage_plan(
+            usagePlanId=plan['id']
+        )
+        plan = None
+        time.sleep(3)
+
     if plan is None:
         plan = apigateway.create_usage_plan(
             name='feature-flipper',

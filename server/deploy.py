@@ -128,12 +128,12 @@ def ensure_tables():
 
 def ensure_lambda_role():
     try:
-        iam.get_role(RoleName='feature_flipper_lambda')
-        print('feature_flipper_lambda IAM role exists')
+        iam.get_role(RoleName='lambda_feature_flipper')
+        print('lambda_feature_flipper IAM role exists')
     except iam.exceptions.NoSuchEntityException:
-        print('creating IAM role feature_flipper_lambda')
+        print('creating IAM role lambda_feature_flipper')
         iam.create_role(
-            RoleName='feature_flipper_lambda',
+            RoleName='lambda_feature_flipper',
             AssumeRolePolicyDocument='''{
               "Version": "2012-10-17",
               "Statement": [
@@ -151,10 +151,10 @@ def ensure_lambda_role():
 
     try:
         iam.get_role_policy(
-            RoleName='feature_flipper_lambda',
+            RoleName='lambda_feature_flipper',
             PolicyName='dynamodb',
         )
-        print('feature_flipper_lambda role has needed inline policy')
+        print('lambda_feature_flipper role has needed inline policy')
     except iam.exceptions.NoSuchEntityException:
         ff = dynamodb.describe_table(TableName='FeatureFlipper')
         ffa = dynamodb.describe_table(TableName='FeatureFlipperAliases')
@@ -189,11 +189,11 @@ def ensure_lambda_role():
             ]
         }, indent=2)
 
-        print('attaching inline policy to role feature_flipper_lambda')
+        print('attaching inline policy to role lambda_feature_flipper')
         print(policy_doc)
 
         iam.put_role_policy(
-            RoleName='feature_flipper_lambda',
+            RoleName='lambda_feature_flipper',
             PolicyName='dynamodb',
             PolicyDocument=policy_doc,
         )
